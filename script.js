@@ -103,3 +103,25 @@ document.querySelectorAll("[data-full]").forEach(el => el.addEventListener("clic
 lightboxClose.addEventListener("click", closeLightbox);
 lightbox.addEventListener("click", e => { if (e.target === lightbox) closeLightbox(); });
 document.addEventListener("keydown", e => { if (e.key === "Escape" && lightbox.classList.contains("open")) closeLightbox(); });
+
+// Email button: phones use the default mail app; computers open Gmail compose (a mailto: link does nothing without a mail app).
+const emailBtn = document.getElementById("emailBtn");
+const copyEmail = document.getElementById("copyEmail");
+if (emailBtn) {
+  const address = emailBtn.dataset.email;
+  emailBtn.addEventListener("click", event => {
+    const isMobile = /Android|iPhone|iPad|iPod/i.test(navigator.userAgent);
+    if (!isMobile) {
+      event.preventDefault();
+      window.open("https://mail.google.com/mail/?view=cm&fs=1&to=" + encodeURIComponent(address) + "&su=" + encodeURIComponent("Portfolio enquiry"), "_blank", "noopener");
+    }
+  });
+}
+if (copyEmail) {
+  copyEmail.addEventListener("click", async () => {
+    const address = document.getElementById("emailText").textContent;
+    try { await navigator.clipboard.writeText(address); copyEmail.textContent = "Copied ✓"; }
+    catch (e) { copyEmail.textContent = "Press Ctrl+C"; }
+    setTimeout(() => { copyEmail.textContent = "Copy"; }, 2000);
+  });
+}
